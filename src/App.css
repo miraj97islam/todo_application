@@ -16,7 +16,7 @@
     }
 
     .notepad {
-      @apply w-[calc(100vw-80px)] h-40 bg-gray-200 border-2 border-gray-300 rounded-lg p-2 text-sm;
+      @apply w-[calc(100vw-80px)] h-40 bg-gray-200 border-2 border-gray-300 rounded-lg p-2;
       @apply sm:w-[calc(100vw-100px)];
       @apply md:w-[calc(100vw-130px)];
       @apply lg:w-[calc(100vw-180px)];
