@@ -64,6 +64,8 @@ function App() {
     localStorage.setItem("todoList", JSON.stringify(updateList));
 
     setTodoList(updateList);
+    setnewInput("");
+
   }
 
 
@@ -74,44 +76,34 @@ function App() {
 
   return (
     <>
-      <div className='grid place-items-center'>
-        <div className='m-4 border-3 border-black'>
-              Google Keep
-        </div>
-
-        <div className='grid place-items-center'>
-            <div>
-              <input onChange={currentTodo} value={newInput} class='border-2 border-black'></input> 
+      <div className='container'>
+       
+        <div className='notepad-container'>
+            <div className='m-4'>
+                  Google Keep
             </div>
             <div>
-                <button onClick={addTodo} className='mt-4 mb-8 bg-green-500 hover:bg-green-700 text-white font-medium py-1 px-10 rounded-lg shadow-lg'>
+              <textarea onChange={currentTodo} value={newInput} class='notepad'></textarea> 
+            </div>
+            <div>
+                <button onClick={addTodo} className='btn-save'>
                     Save          
                 </button>
             </div>
-         </div>
+        </div>
 
-          <div className='px-60 py-2'>
-              <ul>
-                { todoList.map((task) => (
-                          <li key={task.id} className='p-2 text-base text-center'>
-                            {task.task} 
-                          <div>
-                            <button onClick={()=>visualizeToUpdate(task.id)} 
-                                    className='ml-10 mr-2  bg-yellow-500 hover:bg-yellow-700 text-white text-base font-normal mt-2 py-1 px-6 rounded-lg shadow-lg'
-                             >
-                                Update
-                            </button>
-                            <button onClick={()=> deleteTodo(task.id)}  className='bg-red-500 hover:bg-red-700 text-white text-base font-normal mt-2 py-1 px-6 rounded-lg shadow-lg'>
-                                Delete
-                            </button>
-                            </div>
-                        </li>
-                    ))}
-              </ul>
-          </div>
-      </div>
+        { todoList.map((task) => (
+            <div  className='note-item'>
+                  <div key={task.id}  onClick={()=>visualizeToUpdate(task.id)} className='note-item-content'>
+                    {task.task} 
+                  </div>
+                    <button onClick={()=> deleteTodo(task.id)}  className='btn-delete'>
+                        X
+                    </button>
+            </div> 
+            ))}
+        </div>
     </>
-    
   );
 }
 
