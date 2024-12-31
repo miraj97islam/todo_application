@@ -46,11 +46,16 @@
     }
 
     .tab-buttons{
-      @apply m-2
+      @apply flex gap-6;
     }
 
+    .tab-btn-underline{
+      @apply underline;
+    }
+    
+
     .btn-tasks{
-        @apply w-20 text-sm underline;
+        @apply w-20 text-sm pr-10;
     }
 
     .btn-notes{
@@ -58,7 +63,7 @@
     }
 
     .note-item {
-      @apply w-[calc(100vw-80px)]  bg-[#01394c] text-[#F7E2DF] h-7 border overflow-hidden border-gray-300 pl-2 pr-4 py-1 rounded-md shadow-md cursor-pointer relative;
+      @apply w-[calc(100vw-80px)]  bg-[#01394c] text-[#F7E2DF] h-7 border overflow-hidden border-gray-300 mt-4 pl-2 pr-4  rounded-md shadow-md cursor-pointer relative;
       @apply sm:w-[calc(100vw-100px)] sm:px-4;
       @apply md:w-[calc(100vw-180px)] md:h-8 md:px-4;
       @apply lg:w-[calc(100vw-240px)];
@@ -71,6 +76,6 @@
     .btn-delete {
         @apply absolute top-1 right-1 text-base bg-transparent border-none cursor-pointer max-w-fit text-red-400 font-medium;
         @apply sm:top-1 sm:right-2;
-        @apply md:top-2 md:right-3;
+        @apply md:top-1 md:right-3;
       }
   }
