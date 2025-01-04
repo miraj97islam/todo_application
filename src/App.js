@@ -1,5 +1,5 @@
 import './App.css';
-import { use, useState, useEffect  } from 'react';
+import { useState, useEffect  } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
     }else if(elementType==='elementTextArea'){
       return <textarea onChange={onChangeTrigger} value={inputValue} className={className} placeholder = {placeholder}></textarea> 
     }
-
 }
 
 
@@ -65,12 +64,19 @@ function App() {
   const[editTaskId, setEditTaskId] = useState(null);
   const[inputType, setinputType] = useState("elementInput");
     
-    useEffect(() => { 
-      const savedTodos = localStorage.getItem("todoList");
+    // useEffect(() => { 
+    //   const savedTodos = localStorage.getItem("todoList");
 
-      if (savedTodos) {
-        setTodoList(JSON.parse(savedTodos));
-      }
+    //   if (savedTodos) {
+    //     setTodoList(JSON.parse(savedTodos));
+    //   }
+    // }, []);
+
+    useEffect(() => {
+      fetch('http://localhost:5000/todos')
+        .then(response => response.json())
+        .then(data => setTodoList(data))
+        .catch(error => console.error('Error fetching todos:', error));
     }, []);
 
 
