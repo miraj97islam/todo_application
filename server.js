@@ -1,33 +1,40 @@
 const http = require('http');
-const fs = require('fs');
-// const { getProducts } = require('./controllers/todoController');
-const url = require('url');
-const { json } = require('stream/consumers');
-const TODOS_FILE_PATH = './todos.json';
 
-function readTodosFromFile() {
-    try {
-      const data = fs.readFileSync(TODOS_FILE_PATH);
-      return JSON.parse(data);
-    } catch (error) {
-      return ['error found']; // Return an empty array if the file doesn't exist or there's an error
-    }
-  }
-
+const {
+ getTodos,
+ deleteTodo,
+ createTodo
+} = require('./controllers/todoController');
 
 const server = http.createServer((req, res) =>{
+  
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const parsedUrl = url.parse(req.url, true);
 
-  // GET /todos - Get all todos
-  if (parsedUrl.pathname === '/todos' && req.method === 'GET') {
-    const todos = readTodosFromFile();
-    res.writeHead(200);
-    res.end(JSON.stringify(todos));
-    // res.end(todos);
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204; // No Content
+    res.end();
+    return;
+  }
+
+  if (req.url === '/todos' && req.method === 'GET') {
+    getTodos(req, res);
+  }else if (req.url === '/todos' && req.method === 'POST') {
+    createTodo(req, res);
+  } else if (req.url.match(/\/todos\/\w+/) && req.method === 'DELETE') {
+    const id = req.url.split('/')[2];
+    deleteTodo(req, res, id);
+  }else {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(
+      JSON.stringify({
+        message: 'Route Not Found: Please use the api/products endpoint',
+      })
+    );
   }
 })
 

@@ -63,14 +63,6 @@ function App() {
   const[todoList, setTodoList] = useState([]);
   const[editTaskId, setEditTaskId] = useState(null);
   const[inputType, setinputType] = useState("elementInput");
-    
-    // useEffect(() => { 
-    //   const savedTodos = localStorage.getItem("todoList");
-
-    //   if (savedTodos) {
-    //     setTodoList(JSON.parse(savedTodos));
-    //   }
-    // }, []);
 
     useEffect(() => {
       fetch('http://localhost:5000/todos')
@@ -87,6 +79,12 @@ function App() {
       return
     }
 
+    const newValue = {
+      task: newInput,
+      inputType: inputType,
+    };
+  
+
      if (editTaskId){
         todoList.find(task=> task.id===editTaskId).task = newInput;
 
@@ -97,18 +95,33 @@ function App() {
         setEditTaskId("");
 
      }else{
-      const newValue = {
-        id: uuidv4(),
-        task: newInput,
-        inputType: inputType
-      }
-  
-      const updateList = [...todoList, newValue];
 
-      localStorage.setItem("todoList", JSON.stringify(updateList));
+          fetch('http://localhost:5000/todos', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newValue),
+          })
+            .then(response => response.json())
+            .then(newTodo => {
+              setTodoList([...todoList, newTodo]);
+              setnewInput('');
+            })
+            .catch(error => console.error('Error adding todo:', error));
+
+      // const newValue = {
+      //   id: uuidv4(),
+      //   task: newInput,
+      //   inputType: inputType
+      // }
   
-      setTodoList(updateList);
-      setnewInput("");
+      // const updateList = [...todoList, newValue];
+
+      // localStorage.setItem("todoList", JSON.stringify(updateList));
+  
+      // setTodoList(updateList);
+      // setnewInput("");
     }    
   }
 
@@ -124,13 +137,25 @@ function App() {
 
 
   function deleteTodo(id){
-    const updateList = todoList.filter((task)=> task.id !== id);
+    // const updateList = todoList.filter((task)=> task.id !== id);
 
-    localStorage.setItem("todoList", JSON.stringify(updateList));
+    // localStorage.setItem("todoList", JSON.stringify(updateList));
 
-    setTodoList(updateList);
-    setnewInput("");
-    setEditTaskId(null);
+    // setTodoList(updateList);
+    // setnewInput("");
+    // setEditTaskId(null);
+
+
+    fetch(`http://localhost:5000/todos/${id}`, {
+      method: 'DELETE',
+    })
+      .then(() => {
+        const updatedTodos = todoList.filter(task => task.id !== id);
+        setTodoList(updatedTodos);
+        setnewInput("");
+        setEditTaskId(null);
+      })
+      .catch(error => console.error('Error deleting todo:', error));
   }
 
 
