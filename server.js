@@ -3,7 +3,9 @@ const http = require('http');
 const {
  getTodos,
  deleteTodo,
- createTodo
+ createTodo,
+ updateTodo,
+ getTodo
 } = require('./controllers/todoController');
 
 const server = http.createServer((req, res) =>{
@@ -23,16 +25,22 @@ const server = http.createServer((req, res) =>{
 
   if (req.url === '/todos' && req.method === 'GET') {
     getTodos(req, res);
+  }else if (req.url.match(/\/todos\/\w+/) && req.method === 'GET') {
+    const id = req.url.split('/')[2];
+    getTodo(req, res, id);
   }else if (req.url === '/todos' && req.method === 'POST') {
     createTodo(req, res);
-  } else if (req.url.match(/\/todos\/\w+/) && req.method === 'DELETE') {
+  }else if (req.url.match(/\/todos\/\w+/) && req.method === 'PUT') {
+    const id = req.url.split('/')[2];
+    updateTodo(req, res, id);
+   } else if (req.url.match(/\/todos\/\w+/) && req.method === 'DELETE') {
     const id = req.url.split('/')[2];
     deleteTodo(req, res, id);
   }else {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(
       JSON.stringify({
-        message: 'Route Not Found: Please use the api/products endpoint',
+        message: 'Route Not Found: Please use the /todos endpoint',
       })
     );
   }

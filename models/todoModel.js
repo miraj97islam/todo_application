@@ -21,10 +21,18 @@ function create(todo) {
     return new Promise((resolve, reject) => {
         const newTodo = {id: uuidv4(), ...todo}
         todos.push(newTodo)
-        // if (process.env.NODE_ENV !== 'test') {
             writeDataToFile('./data/todos.json', todos);
-        // }
         resolve(newTodo)
+    })
+}
+
+
+function update(id, todo) {
+    return new Promise((resolve, reject) => {
+        const index = todos.findIndex((p) => p.id === id)
+        todos[index] = {id, ...todo}
+            writeDataToFile('./data/todos.json', todos);
+        resolve(todos[index])
     })
 }
 
@@ -32,12 +40,10 @@ function create(todo) {
 function remove(id) {
     return new Promise((resolve, reject) => {
          todos = todos.filter((p) => p.id !== id)
-        // if (process.env.NODE_ENV !== 'test') {
             writeDataToFile('./data/todos.json', todos);
-        // }
         resolve()
     })
 }
 
 
-module.exports = {findAll, findById, create, remove};
+module.exports = {findAll, findById, create, remove, update};

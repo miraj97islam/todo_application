@@ -13,6 +13,23 @@ async function getTodos(req, res) {
 }
 
 
+async function getTodo(req, res, id) {
+    try {
+        const todo = await Todos.findById(id)
+
+        if(!todo) {
+            res.writeHead(404, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'Todo Not Found' }))
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify(todo))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 async function createTodo(req, res) {
     try {
         const body = await getPostData(req)
@@ -29,6 +46,34 @@ async function createTodo(req, res) {
         res.writeHead(201, { 'Content-Type': 'application/json' })
         return res.end(JSON.stringify(newTodo))  
 
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+async function updateTodo(req, res, id) {
+    try {
+        const todo = await Todos.findById(id)
+
+        if(!todo) {
+            res.writeHead(404, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'Todo Not Found' }))
+        } else {
+            const body = await getPostData(req)
+
+            const { inputType, task } = JSON.parse(body)
+
+            const TodoData = {
+                inputType: inputType || todo.inputType,
+                task: task || todo.task
+            }
+
+            const updateTodo = await Todos.update(id, TodoData)
+
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            return res.end(JSON.stringify(updateTodo)) 
+        }
     } catch (error) {
         console.log(error)
     }
@@ -52,4 +97,4 @@ async function deleteTodo(req, res, id) {
     }
 }
 
-module.exports = {getTodos, deleteTodo, createTodo};
+module.exports = {getTodos, deleteTodo, createTodo, updateTodo, getTodo};
